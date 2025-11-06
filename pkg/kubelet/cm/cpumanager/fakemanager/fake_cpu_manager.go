@@ -17,24 +17,23 @@ limitations under the License.
 package fakemanager
 
 import (
-    
-    v1 "k8s.io/api/core/v1"
-    "k8s.io/klog/v2"
-    "k8s.io/kubernetes/pkg/kubelet/cm/containermap"
-    "k8s.io/kubernetes/pkg/kubelet/cm/cpumanager"
-    "k8s.io/kubernetes/pkg/kubelet/cm/cpumanager/state"
-    "k8s.io/kubernetes/pkg/kubelet/cm/topologymanager"
-    "k8s.io/kubernetes/pkg/kubelet/config"
-    "k8s.io/kubernetes/pkg/kubelet/status"
-    "k8s.io/utils/cpuset"
+	v1 "k8s.io/api/core/v1"
+	"k8s.io/klog/v2"
+	"k8s.io/kubernetes/pkg/kubelet/cm/containermap"
+	"k8s.io/kubernetes/pkg/kubelet/cm/cpumanager"
+	"k8s.io/kubernetes/pkg/kubelet/cm/cpumanager/state"
+	"k8s.io/kubernetes/pkg/kubelet/cm/topologymanager"
+	"k8s.io/kubernetes/pkg/kubelet/config"
+	"k8s.io/kubernetes/pkg/kubelet/status"
+	"k8s.io/utils/cpuset"
 )
 
 // Type aliases - these import interfaces from the parent cpumanager package
 type (
-    Manager        = cpumanager.Manager
-    Policy         = cpumanager.Policy
-    ActivePodsFunc = cpumanager.ActivePodsFunc
-    RuntimeService = cpumanager.RuntimeService
+	Manager        = cpumanager.Manager
+	Policy         = cpumanager.Policy
+	ActivePodsFunc = cpumanager.ActivePodsFunc
+	RuntimeService = cpumanager.RuntimeService
 )
 
 // Ensure FakeManager implements Manager interface
@@ -42,70 +41,70 @@ var _ Manager = &FakeManager{}
 
 // FakeManager is a concrete implementation of the Manager interface for testing.
 type FakeManager struct {
-    state  state.State
+	state state.State
 }
 
 func (m *FakeManager) Start(activePods ActivePodsFunc, sourcesReady config.SourcesReady, podStatusProvider status.PodStatusProvider, containerRuntime RuntimeService, initialContainers containermap.ContainerMap) error {
-    klog.InfoS("Start()")
-    return nil
+	klog.InfoS("Start()")
+	return nil
 }
 
 func (m *FakeManager) Policy() Policy {
-    klog.InfoS("Policy()")
-    pol, _ := cpumanager.NewNonePolicy(nil)
-    return pol
+	klog.InfoS("Policy()")
+	pol, _ := cpumanager.NewNonePolicy(nil)
+	return pol
 }
 
 func (m *FakeManager) Allocate(pod *v1.Pod, container *v1.Container) error {
-    klog.InfoS("Allocate", "pod", klog.KObj(pod), "containerName", container.Name)
-    return nil
+	klog.InfoS("Allocate", "pod", klog.KObj(pod), "containerName", container.Name)
+	return nil
 }
 
 func (m *FakeManager) AddContainer(pod *v1.Pod, container *v1.Container, containerID string) {
-    klog.InfoS("AddContainer", "pod", klog.KObj(pod), "containerName", container.Name, "containerID", containerID)
+	klog.InfoS("AddContainer", "pod", klog.KObj(pod), "containerName", container.Name, "containerID", containerID)
 }
 func (m *FakeManager) RemoveContainer(containerID string) error {
-    klog.InfoS("RemoveContainer", "containerID", containerID)
-    return nil
+	klog.InfoS("RemoveContainer", "containerID", containerID)
+	return nil
 }
 
 func (m *FakeManager) GetTopologyHints(pod *v1.Pod, container *v1.Container) map[string][]topologymanager.TopologyHint {
-    klog.InfoS("Get container topology hints")
-    return map[string][]topologymanager.TopologyHint{}
+	klog.InfoS("Get container topology hints")
+	return map[string][]topologymanager.TopologyHint{}
 }
 
 func (m *FakeManager) GetPodTopologyHints(pod *v1.Pod) map[string][]topologymanager.TopologyHint {
-    klog.InfoS("Get pod topology hints")
-    return map[string][]topologymanager.TopologyHint{}
+	klog.InfoS("Get pod topology hints")
+	return map[string][]topologymanager.TopologyHint{}
 }
 
 func (m *FakeManager) State() state.Reader {
-    return m.state
+	return m.state
 }
 
 func (m *FakeManager) GetExclusiveCPUs(podUID, containerName string) cpuset.CPUSet {
-    klog.InfoS("GetExclusiveCPUs", "podUID", podUID, "containerName", containerName)
-    return cpuset.CPUSet{}
+	klog.InfoS("GetExclusiveCPUs", "podUID", podUID, "containerName", containerName)
+	return cpuset.CPUSet{}
 }
 
 func (m *FakeManager) GetAllocatableCPUs() cpuset.CPUSet {
-    klog.InfoS("Get Allocatable CPUs")
-    return cpuset.CPUSet{}
+	klog.InfoS("Get Allocatable CPUs")
+	return cpuset.CPUSet{}
 }
 
 func (m *FakeManager) GetCPUAffinity(podUID, containerName string) cpuset.CPUSet {
-    klog.InfoS("GetCPUAffinity", "podUID", podUID, "containerName", containerName)
-    return cpuset.CPUSet{}
+	klog.InfoS("GetCPUAffinity", "podUID", podUID, "containerName", containerName)
+	return cpuset.CPUSet{}
 }
 
 func (m *FakeManager) GetAllCPUs() cpuset.CPUSet {
-    klog.InfoS("GetAllCPUs")
-    return cpuset.CPUSet{}
+	klog.InfoS("GetAllCPUs")
+	return cpuset.CPUSet{}
 }
 
 // NewFakeManager creates and returns a new FakeManager for testing.
 func NewFakeManager() *FakeManager {
-    return &FakeManager{
-        state:  state.NewMemoryState(),
-    }
+	return &FakeManager{
+		state: state.NewMemoryState(),
+	}
 }
