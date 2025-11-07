@@ -29,6 +29,7 @@ import (
 
 	utilfeature "k8s.io/apiserver/pkg/util/feature"
 	kubefeatures "k8s.io/kubernetes/pkg/features"
+	"k8s.io/kubernetes/pkg/kubelet/cm/cpumanager/fakemanager"
 	"k8s.io/kubernetes/pkg/kubelet/cm/memorymanager"
 
 	"k8s.io/klog/v2"
@@ -135,7 +136,7 @@ func NewContainerManager(mountUtil mount.Interface, cadvisorInterface cadvisor.I
 	}
 
 	cm.topologyManager = topologymanager.NewFakeManager()
-	cm.cpuManager = cpumanager.NewFakeManager()
+	cm.cpuManager = fakemanager.NewFakeManager()
 	cm.memoryManager = memorymanager.NewFakeManager(context.TODO())
 
 	if utilfeature.DefaultFeatureGate.Enabled(kubefeatures.WindowsCPUAndMemoryAffinity) {
